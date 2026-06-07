@@ -6,10 +6,9 @@ from app.services.ai_service import get_chat_response
 app = FastAPI(title="Context-Aware ChatBot API")
 
 # Allow frontend to communicate with backend
-# In production, you would replace "*" with your specific frontend domain
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173", "http://localhost:8000"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -17,11 +16,13 @@ app.add_middleware(
 
 @app.post("/chat", response_model=ChatResponse)
 async def chat_endpoint(request: ChatRequest):
+    print(f"--- Incoming Message: {request.message} ---")
     try:
         response_text = get_chat_response(request.message)
+        print(f"--- AI Response Success ---")
         return ChatResponse(response=response_text)
     except Exception as e:
-        print(f"Error in chat endpoint: {e}")
+        print(f"--- ERROR IN CHAT ENDPOINT: {e} ---")
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/health")

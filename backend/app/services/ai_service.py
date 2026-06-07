@@ -21,7 +21,9 @@ def get_chat_response(user_input: str):
     
     # Initialize session if it doesn't exist
     if chat_session is None:
-        model = genai.GenerativeModel('gemini-1.5-flash')
+        model_name = 'gemini-3.5-flash'
+        print(f"Initializing Gemini with model: {model_name}")
+        model = genai.GenerativeModel(model_name)
         chat_session = model.start_chat(history=[])
     
     # Send message and get response
